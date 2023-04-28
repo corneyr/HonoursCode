@@ -1,7 +1,7 @@
 %%%%% import Characteristics_redcap.csv file
 %Characteristics_redcap 
-pathdef = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\Data'
-addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\Data')
+pathdef = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data'
+addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data')
 filename = 'characteristics_redcap.csv';
 
 file = sprintf('%s\\%s',pathdef, filename)
@@ -37,7 +37,7 @@ end
 
 
 %BPplus data 
-addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\Data\Hobart BP+\0000')
+addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\Hobart BP+\0000')
 DOMnode = xmlread('BPplus_00001.xml')
 readtable('BPplus_00001.xml')
-
+xmlread('BPplus_00001.xml')
