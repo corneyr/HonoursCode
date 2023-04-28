@@ -1,0 +1,49 @@
+%Characteristics_redcap 
+filename = 'characteristics_redcap.csv';
+pathdef = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\Data'
+addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\Data')
+
+file = sprintf('%s\\%s',pathdef, filename)
+
+%[file,path] = uigetfile('*.*','Select one or more files','MultiSelect','on');
+
+%InputFormat('dd/MM/uuuu mm:HH')
+
+%datetime(file)
+
+% read the CSV file into a table
+data = readtable(file);
+
+% select the column containing the XML file names
+file_column = data(:, n);
+
+% loop over each file name in the column and open the corresponding XML file
+num_files = height(file_column);
+for i = 1:num_files
+    file_name = file_column{i, 1};
+    xml_data = xmlread(file_name);
+    % do something with the XML data,
+end
+
+readtable('characteristics_redcap.csv')
+
+%BPplus data 
+addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\Data\Hobart BP+\0000')
+DOMnode = xmlread('BPplus_00001.xml')
+
+function theStruct = parseXML('BPplus_00001.xml')
+% PARSEXML Convert XML file to a MATLAB structure.
+try
+   tree = xmlread(BPplus_00001.xml);
+catch
+   error('Failed to read XML file %s.','BPplus_00001.xml');
+end
+
+% Recurse over child nodes. This could run into problems 
+% with very deeply nested trees.
+try
+   theStruct = parseChildNodes(tree);
+catch
+   error('Unable to parse XML file %s.','BPplus_00001.xml');
+end
+
