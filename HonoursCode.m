@@ -35,18 +35,20 @@ for i = 1:num_files
 end
 
 
-%BPplus data 
+%%%BPplus data - not needed
 addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\Hobart BP+\0000')
 DOMnode = xmlread('BPplus_00001.xml')
 readtable('BPplus_00001.xml')
 xmlread('BPplus_00001.xml')
 
+%%%BPplus data - not needed
+
+%%%Reading in the xml files
 % Define the XML file name
 
 xmlFileName = 'BPplus_00001.xml';
 
  
-
 % Read the XML file
 
 xmlData = xmlread(xmlFileName);
@@ -84,3 +86,5 @@ for i = 1:childNodes.getLength()
     end
 
 end
+
+%%%Reading in the xml files
