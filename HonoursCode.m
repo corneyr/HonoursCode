@@ -23,8 +23,12 @@ readtable(file)
 data = readtable(file);
 
 % select the column containing the XML file names
+file_column = data(:, 2)
+file_column = data(:, 4)
 file_column = data(:, 17)
 file_column = data(:, 20)
+
+%file_column = data(:, 2), data(:, 4), data(:, 17), data(:, 20)
 
 % loop over each file name in the column and open the corresponding XML file
 num_files = height(file_column);
