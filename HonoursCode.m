@@ -86,6 +86,7 @@ for i = 1:childNodes.getLength()
 end
 
 %%%Reading in the xml files
+[fn, path] = uigetfile()
 
 %%%Plotting the xml file
 %cuffPressure = ReadXML('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\Hobart BP+\0000/0000/BPplus_00013.xml')
