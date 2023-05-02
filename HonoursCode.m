@@ -87,7 +87,12 @@ end
 
 %%%Reading in the xml files
 
-
-cuffPressure = ReadXML('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\Hobart BP+\0000/0000/BPplus_00013.xml')
+%%%Plotting the xml file
+%cuffPressure = ReadXML('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\Hobart BP+\0000/0000/BPplus_00013.xml')
+cuffPressure = xmlread([path fn], 'AllowDoctype',true);
+getFirstChild(cuffPressure)
+cuffPressure = ReadXML([path fn])
+plot(cuffPressure)
+%%%Plotting the xml file
 
 osc = Oscillogram(cuffpressure, sampletime, 'BaselineSmoothTime', 4, 'OscillogramSmoothTime', 0.2, ‘Plot’, 1)
