@@ -11,6 +11,8 @@ function [beatI, regionlimits] = BeatOnsetDetect(data, varargin)
 %        Associated options: DerivativePeakThreshold, MinimumThreshold
 %  3. 'Peaks' simply detects the peaks (e.g. for ECG R-wave detection)
 %        Associated options: 'PeakThreshold'
+% 'RegionLimits' should be a 2-element vector specifies the analysis region. For example, [1000, 2000] would not
+%    detect any beats with indexes less than 1000 or greater than 2000
 % 'Interactive' can be 1 in order to be able to edit dP/dtmax threshold and delete beats; or 0 (no editing, default)
 % 'InteractiveIfAutoFails', value of 1 means if no beat onsets are detected automatically, switch to interactive mode; 0 means auto only
 % 'DerivativePeakThreshold' determines the threshold for the first pass detection of beats
@@ -25,8 +27,6 @@ function [beatI, regionlimits] = BeatOnsetDetect(data, varargin)
 %   beatI = BeatOnsetDetect(data)
 %   beatI = BeatOnsetDetect(data, 'DerivativePeakThreshold', 0.2, 'CurvatureThreshold', 0.01)
 %   beatI = BeatOnsetDetect(data, 'Method', 'GradientIntersection', 'DerivativePeakThreshold', 0.2, 'MinimumThreshold', 0.4)
-
-% Author: Jonathan Mynard, jonathan.mynard@mcri.edu.au
 
 p = inputParser;
 defaultCurvatureThreshold = 0.002;
