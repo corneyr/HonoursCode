@@ -89,7 +89,7 @@ end
 [fn, path] = uigetfile()
 
 %%%Plotting the xml file
-%cuffPressure = ReadXML('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\Hobart BP+\0000/0000/BPplus_00013.xml')
+%cuffPressure = ReadXML('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\Hobart BP+\0000/0000/BPplus_00001.xml')
 cuffPressure = xmlread([path fn], 'AllowDoctype',true);
 getFirstChild(cuffPressure)
 cuffPressure = ReadXML([path fn])
