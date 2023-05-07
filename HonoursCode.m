@@ -6,8 +6,6 @@ filename = 'characteristics_redcap.csv';
 
 file = sprintf('%s\\%s',pathdef, filename)
 
-readtable(file)
-
 % readtable('characteristics_redcap.csv')
 
 %%%%%%%%% %import Characteristics_redcap.csv file
@@ -96,4 +94,15 @@ cuffPressure = ReadXML([path fn])
 plot(cuffPressure)
 %%%Plotting the xml file
 
-osc = Oscillogram(cuffpressure, sampletime, 'BaselineSmoothTime', 4, 'OscillogramSmoothTime', 0.2, ‘Plot’, 1)
+sampletime = 0.004;
+osc = Oscillogram(cuffPressure, sampletime, 'BaselineSmoothTime', 4, 'OscillogramSmoothTime', 0.2, 'Plot', 1);
+set(gcf, 'position', 1.0e+03 * [-1.6663    0.2143    1.1560    0.5073]);
+
+[beatI, regionLimits] = analysis.BeatOnsetDetect(osc, 'Method', 'GradientIntersection', 'Interactive', 1)
+
+%%%pathway to invasive files%%
+addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\InvasiveBP')
+%%%pathway to invasive files%%
+
+readtable('100176076_22062022_cuff1_P.txt')
+
