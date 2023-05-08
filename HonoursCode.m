@@ -26,8 +26,7 @@ file_column = data(:, 4);
 file_column = data(:, 17);
 file_column = data(:, 20);
 
-%file_column = data(:, 2), data(:, 4), data(:, 17), data(:, 20)
-
+%%%BPplus data - not needed
 % loop over each file name in the column and open the corresponding XML file
 num_files = height(file_column);
 for i = 1:num_files
@@ -36,8 +35,6 @@ for i = 1:num_files
     % do something with the XML data,
 end
 
-
-%%%BPplus data - not needed
 addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\Hobart BP+\0000');
 DOMnode = xmlread('BPplus_00001.xml');
 readtable('BPplus_00001.xml');
