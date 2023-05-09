@@ -1,8 +1,8 @@
 function [beatI, regionlimits] = BeatOnsetDetect(data, varargin)
 % Performs beat detection
 % data: a vector containing haemodynamic data
-% 'Method' can be 
-%  1. 'PeakCurvature' (default) based on peak curvature preceding dP/dtmax similar to that described 
+% 'Method' can be
+%  1. 'PeakCurvature' (default) based on peak curvature preceding dP/dtmax similar to that described
 %        in Mynard JP, Penny DJ & Smolich JJ. (2008). IEEE Trans Biomed Eng 55, 2651-2657.
 %        Associated options: DerivativePeakThreshold, CurvatureThreshold, IgnoreUpToStartI
 %  2. 'GradientIntersection' detects the onset based on the intersection of two lines.
@@ -84,8 +84,8 @@ if params.Interactive
     f.Tag = 'BeatFig';
     a = axes(f);
     a.Tag = 'BeatAx';
-    set(f, 'position', [95         170        1658         314]);    
-    
+    set(f, 'position', [95         170        1658         314]);
+
     %% Determine which threshold is adustable
     switch params.Method
         case 'PeakCurvature'
@@ -95,12 +95,12 @@ if params.Interactive
         case 'Peaks'
             params.adjustableThreshold = 'PeakThreshold';
     end
-    
+
     %% Plot the data and beat markers
     hold on;
-    plot(a, data);  
+    plot(a, data);
     xlim([0, length(data)]);
-    
+
     uicontrol('Position', [51    26    86    33], ...
               'Style', 'PushButton', ...
               'String', 'Done', ...
@@ -116,7 +116,7 @@ if params.Interactive
               'Style', 'PushButton', ...
               'String', 'Detect', ...
               'Callback', {@detectBeats, f, data, params}, ...
-              'FontSize', fontsize);    
+              'FontSize', fontsize);
     uicontrol('Position', [103   123    41    33], ...
               'Style', 'PushButton', ...
               'String', '+', ...
@@ -127,13 +127,13 @@ if params.Interactive
               'String', '-', ...
               'Callback', {@decreaseThreshold, f, data, params}, ...
               'FontSize', fontsize+3);
-    
+
     handles = guihandles(f);
     guidata(f, handles);
     handles.params = params;
-    handles.beataccept = ones(length(beatI),1);    
+    handles.beataccept = ones(length(beatI),1);
     handles.data = data;
-    
+
     yinrange = handles.data(round(params.RegionLimits(1)):round(params.RegionLimits(2)));
     ymin = min(yinrange) - 0.1*range(yinrange);
     ymax = max(yinrange) + 0.1*range(yinrange);
@@ -143,14 +143,14 @@ if params.Interactive
     handles.markeryrange = yl;
     handles.cursh(1) = plot(params.RegionLimits(1)*[1,1], [yl(1), yl(2)], 'r', 'linewidth', 2, 'ButtonDownFcn', {@startMoveCursor, f, 1});
     handles.cursh(2) = plot(params.RegionLimits(2)*[1,1], [yl(1), yl(2)], 'r', 'linewidth', 2, 'ButtonDownFcn', {@startMoveCursor, f, 2});
-    ylim(yl);      
-    
+    ylim(yl);
+
     handles = plotBeatMarkers(a, beatI, handles);
-    
+
     guidata(f, handles);
-    
+
     uiwait(f);
-    
+
     handles = guidata(f);
     if ~isfield(handles, 'bh')  % No beats were detected
         beatI = [];
@@ -168,12 +168,12 @@ if params.Interactive
         end
         beatI = beatI(1:nbeats);
     end
-    
+
     regionlimits(1) = handles.cursh(1).XData(1);
     regionlimits(2) = handles.cursh(2).XData(1);
-    
+
     close(f);
-    
+
 end
 
 function startMoveCursor(~, ~, f, cursnum)
@@ -255,7 +255,7 @@ params.(params.adjustableThreshold) = str2double(handles.ThreshEdit.String);
 lowerlim = round(handles.cursh(1).XData(1));
 upperlim = round(handles.cursh(2).XData(1));
 
-beatI = AutoBeatDetect(data(lowerlim:upperlim), params);
+beatI = analysis.AutoBeatDetect(data(lowerlim:upperlim), params);
 if ~isempty(beatI)
     beatI = beatI + lowerlim + 1;
 end
@@ -266,7 +266,7 @@ if isfield(handles, 'bh')
     end
 end
 
-handles.beataccept = ones(length(beatI),1);       
+handles.beataccept = ones(length(beatI),1);
 handles = plotBeatMarkers(handles.BeatAx, beatI, handles);
 guidata(f, handles);
 
