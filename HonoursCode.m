@@ -42,7 +42,9 @@ osc = Oscillogram(cuffPressure, sampletime, 'BaselineSmoothTime', 4, 'Oscillogra
 %set(gcf, 'position', 1.0e+03 * [-1.6663    0.2143    1.1560    0.5073]);
 
 %%%beat detection%%%
-[beatI, regionLimits] = analysis.BeatOnsetDetect(osc, 'Method', 'GradientIntersection', 'Interactive', 1);
+[~,maxI] = max(cuffPressure);
+[beatI, regionLimits] = analysis.BeatOnsetDetect(osc, 'Method', 'GradientIntersection', 'Interactive', 1, ...
+                            'RegionLimits', [maxI, length(cuffPressure)], 'MinimumThreshold', 0.3, 'DerivativePeakThreshold', 0.05);
 %%%beat detection%%%
 
 %%%pathway to invasive files%%
