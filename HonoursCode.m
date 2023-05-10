@@ -1,5 +1,6 @@
-%%%%% import Characteristics_redcap.csv file
-%Characteristics_redcap 
+%% import Characteristics_redcap.csv file
+% Characteristics_redcap 
+% Function may be: Characteristics_redcap = getCharacteristics_redcap(data)
 pathdef = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data'
 addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data');
 filename = 'characteristics_redcap.csv';
@@ -10,11 +11,11 @@ file = sprintf('%s\\%s',pathdef, filename);
 
 %%%%% %import Characteristics_redcap.csv file
 
-%[file,path] = uigetfile('*.*','Select one or more files','MultiSelect','on');
+% [file,path] = uigetfile('*.*','Select one or more files','MultiSelect','on');
 
-%InputFormat('dd/MM/uuuu mm:HH')
+% InputFormat('dd/MM/uuuu mm:HH')
 
-%datetime(file)
+% datetime(file)
 
 % read the CSV file into a table
 data = readtable(file);
@@ -24,9 +25,14 @@ file_column = data(:, 2);
 file_column = data(:, 4);
 file_column = data(:, 17);
 file_column = data(:, 20);
+%%
 
+%% getXMLfile from cvs file
+xml_data = getXMLfile(file_index, toppath)
+%Example: xml_data = getXMLfile(43)  then: plot(xml_data)
+%%
 
-%%%Reading in the xml files
+%% xml files
 [fn, path] = uigetfile();
 
 %%%Plotting the xml file
@@ -46,13 +52,14 @@ osc = Oscillogram(cuffPressure, sampletime, 'BaselineSmoothTime', 4, 'Oscillogra
 [beatI, regionLimits] = analysis.BeatOnsetDetect(osc, 'Method', 'GradientIntersection', 'Interactive', 1, ...
                             'RegionLimits', [maxI, length(cuffPressure)], 'MinimumThreshold', 0.3, 'DerivativePeakThreshold', 0.05);
 %%%beat detection%%%
+%%
 
-%%%pathway to invasive files%%
+%% pathway to invasive files%%
 addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\InvasiveBP\');
-%%%pathway to invasive files%%
+%% pathway to invasive files%%
 
-%%Plot invasive data%%
+%% Plot invasive data%%
 readtable('100176076_22062022_cuff1_P.txt')
 invasivedata = readtable('100176076_22062022_cuff1_P.txt');
 plot(invasivedata.Var1);
-%%Plot invasive data%%
+%% Plot invasive data%%
