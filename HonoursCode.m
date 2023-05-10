@@ -41,25 +41,23 @@ cuffPressure = xmlread([path fn], 'AllowDoctype',true);
 getFirstChild(cuffPressure);
 cuffPressure = ReadXML([path fn]);
 plot(cuffPressure);
-%%%Plotting the xml file
 
 sampletime = 0.004;
 osc = Oscillogram(cuffPressure, sampletime, 'BaselineSmoothTime', 4, 'OscillogramSmoothTime', 0.2, 'Plot', 1);
 %set(gcf, 'position', 1.0e+03 * [-1.6663    0.2143    1.1560    0.5073]);
 
-%%%beat detection%%%
+% beat detection
 [~,maxI] = max(cuffPressure);
 [beatI, regionLimits] = analysis.BeatOnsetDetect(osc, 'Method', 'GradientIntersection', 'Interactive', 1, ...
                             'RegionLimits', [maxI, length(cuffPressure)], 'MinimumThreshold', 0.3, 'DerivativePeakThreshold', 0.05);
-%%%beat detection%%%
 %%
 
-%% pathway to invasive files%%
+%% pathway to invasive files
 addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\InvasiveBP\');
-%% pathway to invasive files%%
+%% pathway to invasive files
 
-%% Plot invasive data%%
+%% Plot invasive data
 readtable('100176076_22062022_cuff1_P.txt')
 invasivedata = readtable('100176076_22062022_cuff1_P.txt');
 plot(invasivedata.Var1);
-%% Plot invasive data%%
+%% Plot invasive data
