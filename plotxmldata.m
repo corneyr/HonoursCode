@@ -13,6 +13,4 @@ getFirstChild(cuffPressure);
 cuffPressure = ReadXML([path fn]);
 plot(cuffPressure);
 
-plotxmldata = plot(cuffPressure);
-
 end
