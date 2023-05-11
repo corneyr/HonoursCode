@@ -1,20 +1,19 @@
 %% import Characteristics_redcap.csv file
-% Characteristics_redcap 
-% Function may be: Characteristics_redcap = getCharacteristics_redcap(data)
-pathdef = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data'
-addpath('C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data');
+if ~exist('pathdef', 'var')
+    pathdef = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data';
+end 
+
+% file = sprintf('%s\\%s',pathdef, filename);
+% data = readtable(file,opts);
 filename = 'characteristics_redcap.csv';
+opts = detectImportOptions(filename);
 
-file = sprintf('%s\\%s',pathdef, filename);
+% Specify column names and types
+opts.SelectedVariableNames = ["thci", "date_of_study", "measno_aor1", "measno_aor2"];
+opts = setvaropts(opts, "date_of_study", "InputFormat", "dd/MM/yyyy");
 
-% read the CSV file into a table
-data = readtable(file);
-
-% select the column containing the XML file names
-file_column = data(:, 2);
-file_column = data(:, 4);
-file_column = data(:, 17);
-file_column = data(:, 20);
+% Import the data
+characteristicsredcap = readtable(filename, opts);
 %%
 
 %% getXMLfile from cvs file
