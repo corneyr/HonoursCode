@@ -1,4 +1,5 @@
 function plotxmldata = plot(cuffPressure);
+
     % finds xml data pathway
     % reads xml data 
     % plots xml data in mmHg
@@ -13,4 +14,5 @@ cuffPressure = ReadXML([path fn]);
 plot(cuffPressure);
 
 plotxmldata = plot(cuffPressure);
+
 end
