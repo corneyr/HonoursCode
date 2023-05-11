@@ -1,19 +1,5 @@
-%% import Characteristics_redcap.csv file
-if ~exist('pathdef', 'var')
-    pathdef = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data';
-end 
-
-% file = sprintf('%s\\%s',pathdef, filename);
-% data = readtable(file,opts);
-filename = 'characteristics_redcap.csv';
-opts = detectImportOptions(filename);
-
-% Specify column names and types
-opts.SelectedVariableNames = ["thci", "date_of_study", "measno_aor1", "measno_aor2"];
-opts = setvaropts(opts, "date_of_study", "InputFormat", "dd/MM/yyyy");
-
-% Import the data
-characteristicsredcap = readtable(filename, opts);
+%% import Characteristics_redcap file and pull out thci, date_of_study, cuffbp1, cuffbp2
+characteristicsredcap = getCharacteristics_redcap
 %%
 
 %% getXMLfile from cvs file
