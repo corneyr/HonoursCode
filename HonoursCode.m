@@ -7,16 +7,6 @@ filename = 'characteristics_redcap.csv';
 
 file = sprintf('%s\\%s',pathdef, filename);
 
-% readtable('characteristics_redcap.csv')
-
-%%%%% %import Characteristics_redcap.csv file
-
-% [file,path] = uigetfile('*.*','Select one or more files','MultiSelect','on');
-
-% InputFormat('dd/MM/uuuu mm:HH')
-
-% datetime(file)
-
 % read the CSV file into a table
 data = readtable(file);
 
