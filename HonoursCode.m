@@ -3,9 +3,8 @@ characteristicsredcap = getCharacteristics_redcap
 %%
 
 %% getXMLfile from cvs file
-xml_data = getXMLfile(file_index, toppath)
-% Example: xml_data = getXMLfile(43)  
-% then: plot(xml_data)
+%xml_data = getXMLfile(file_index, toppath)
+xml_data = getXMLfile(43);  
 %%
 
 %% plotting the cuff BP xml data 
@@ -14,7 +13,7 @@ plotxmldata = plot(cuffPressure);
 % plotting cuff BP as an oscillogram
 sampletime = 0.004;
 osc = Oscillogram(cuffPressure, sampletime, 'BaselineSmoothTime', 4, 'OscillogramSmoothTime', 0.2, 'Plot', 1);
-%set(gcf, 'position', 1.0e+03 * [-1.6663    0.2143    1.1560    0.5073]);
+% set(gcf, 'position', 1.0e+03 * [-1.6663    0.2143    1.1560    0.5073]);
 
 % beat detection of the oscillogram
 [~,maxI] = max(cuffPressure);
