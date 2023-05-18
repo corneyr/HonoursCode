@@ -1,4 +1,4 @@
-function characteristicsredcap = getCharacteristics_redcap
+function characteristicsredcap = getCharacteristics_redcap()
 % This function improts data from characteristics_redcap file 
 % Finds coloums with BPplus file names, THCI, and Date of study 
 % import Characteristics_redcap.csv file
