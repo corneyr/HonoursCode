@@ -16,8 +16,6 @@ else
 end
 
 % Plotting the xml file
-cuffPressure = xmlread(pathFile, 'AllowDoctype',true);
-getFirstChild(cuffPressure);
 cuffPressure = ReadXML(pathFile);
 plotxmldata = plot(cuffPressure);
 xmldatafigure = plotxmldata;
