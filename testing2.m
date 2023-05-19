@@ -15,8 +15,11 @@ for i = 1:height(characteristicsredcap)
 
     bigData(i).id = id;
     bigData(i).cuffID = {};
+    bigData(i).xml_path = {};
+    bigData(i).invasive_path = {};
     bigData(i).cuffID{1} = cuffID1;
     bigData(i).cuffID{2} = cuffID2;
+    disp("test")
 
     if ~isnan(cuffID1) %Check if Cuff recording exists
         two_files = dir(home_path +"\InvasiveBP\" + id + "*"); %the two invasive .txts
@@ -24,14 +27,18 @@ for i = 1:height(characteristicsredcap)
             disp(["Working on ID", id])
             for j = 1:2
                 bigData(i).invasivedata = {};
-                invasivedata = readtable(home_path +"\InvasiveBP\" + two_files(j).name);
+                invasive_path = home_path +"\InvasiveBP\" + two_files(j).name;
+                invasivedata = readtable(invasive_path);
+                bigData(i).invasive_path{j} = invasive_path;
                 bigData(i).invasivedata{j} = invasivedata.Var1;
-                bigData(i).cuffdata{j} = getXMLfile(bigData(i).cuffID{1});
+                [bigData(i).cuffdata{j}, bigData(i).xml_path{j}] = getXMLfile(bigData(i).cuffID{j});
             end
         end
+    
     end
 
-
 end
 
-end
+end 
+
+
