@@ -1,34 +1,16 @@
 %% import Characteristics_redcap file and pull out thci, date_of_study, cuffbp1, cuffbp2
+% may not be needed being used for the bigData function instead
 characteristicsredcap = getCharacteristics_redcap();
 %%
 
 %% get xml name from files csv file
-% xml_data = getXMLfile(file_index, toppath);
-
-%iterate over enteries in characteristicsredcap
-home_path = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\InvasiveBP\';
-
-for i = 1:height(characteristicsredcap)
-    id = characteristicsredcap.thci(i);
-    cuffID1 = characteristicsredcap.measno_aor1(i);
-    cuffID2 = characteristicsredcap.measno_aor2(i);
-
-    two_files = dir("C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\InvasiveBP\" + id + "*");
-    %Process recording 1
-    path_file = "C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\InvasiveBP\" + two_files.name(1);
-    plotinvasive(path_file)
-
-    %process recording 2
-    path_file = "C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\InvasiveBP\" + two_files.name(2);
-    plotinvasive(path_file)
-
-end
-
-xml_data = getXMLfile(23);  
+% xml_data = getXMLfile(file_index, toppath); example: xml_data = getXMLfile(23);
+% bigdata is finding the xml and txt file names from the redcap csv file.
+bigData = testing2();
 %%
 
 %% plotting the cuff BP xml data 
-% may not be needed anymore
+% may not be needed anymore - replaced by getxmldirectory
 xmldatafigure = plotxmldata;
 %%
 

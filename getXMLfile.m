@@ -1,4 +1,4 @@
-function xml_data = getXMLfile(file_index, toppath)
+function [xml_data, xml_path] = getXMLfile(file_index, toppath)
 % This function does ...
 % Inputs: 
 %  file_index: .... (e.g. for BPplus_00019.xml, file_index = 19)
@@ -17,9 +17,14 @@ foldern = 0:8;
 
 filename = sprintf('BPplus_%05.0f.xml', file_index); %change to curl braces if need be
 foldernum = find(file_index >= folderi, 1, 'last');
-filepath = fullfile(toppath, sprintf('%04.0f', foldern(foldernum)));
+xml_path = fullfile(toppath, sprintf('%04.0f', foldern(foldernum)), filename);
 
 fprintf('\nProgress: %s \n', filename);
-xml_data = ReadXML(fullfile(filepath, filename));
+
+if isfile(xml_path)
+    xml_data = ReadXML(xml_path);
+else
+    xml_data = NaN;
+    disp("Could not find " + xml_path)
     % do something with the XML data,
 end
