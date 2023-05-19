@@ -6,7 +6,7 @@ characteristicsredcap = getCharacteristics_redcap();
 %% get xml name from files csv file
 % xml_data = getXMLfile(file_index, toppath); example: xml_data = getXMLfile(23);
 % bigdata is finding the xml and txt file names from the redcap csv file.
-bigData = testing2();
+bigData = linkingxmltotxt();
 %%
 
 %% plotting the cuff BP xml data 
