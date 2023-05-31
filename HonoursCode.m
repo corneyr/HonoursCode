@@ -17,7 +17,7 @@ xmldatafigure = plotxmldata;
 %% pathway to invasive files
 % plot invasvie files in mmHg
 % may not be needed anymore
-invasivefigure = plotinvasive(path_file);
+invasivefigure = plotinvasive(path);
 %%
 
 %% Finding xml files and producing the figures 
