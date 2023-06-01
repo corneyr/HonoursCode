@@ -10,14 +10,15 @@ end
 % file = sprintf('%s\\%s',pathdef, filename);
 % data = readtable(file,opts);
 filename = 'characteristics_redcap.csv';
-opts = detectImportOptions(filename);
+fullpath = fullfile(pathdef,filename);
+opts = detectImportOptions(fullpath);
 
 % Specify column names and types
 opts.SelectedVariableNames = ["thci", "date_of_study", "measno_aor1", "measno_aor2"];
 opts = setvaropts(opts, "date_of_study", "InputFormat", "dd/MM/yyyy");
 
 % Import the data
-characteristicsredcap = readtable(filename, opts);
+characteristicsredcap = readtable(fullpath, opts);
 
 end
 
