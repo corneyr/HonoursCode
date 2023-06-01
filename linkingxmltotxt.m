@@ -21,7 +21,7 @@ for i = 1:height(characteristicsredcap)
     bigData(i).invasive_path = {};
     bigData(i).cuffID{1} = cuffID1;
     bigData(i).cuffID{2} = cuffID2;
-    disp("test")
+    bigData(i).cuffRecordingIdxs = {};
 
     if ~isnan(cuffID1) %Check if Cuff recording exists
         two_files = dir(home_path +"\InvasiveBP\" + id + "*"); %the two invasive .txts
