@@ -22,6 +22,10 @@ function [beatI, regionlimits] = BeatOnsetDetect(data, varargin)
 % 'BeatMarkColor' optionally sets the color of the beat markers
 % 'InspectPlot' allows inspection of how the algorithm is working
 % 'IgnoreUpToStartI' does not detect beats in the first IgnoreUpToStartI points (PeakCurvature method only)
+
+% params.DerivativeAbsoluteThreshold is the absolute threshold for
+% detecting peaks.
+
 % returns beatI containing the indexes of data where beat onset is detected
 % Examples:
 %   beatI = BeatOnsetDetect(data)
@@ -41,6 +45,7 @@ defaultInspectPlot = 0;
 defaultSingleBeat = 0;
 defaultIgnoreUpToStartI = 30;
 defaultInteractiveIfAutoFails = 0;
+defaultDerivativeAbsoluteThreshold = 0.01;
 
 fontsize = 13;
 
@@ -57,6 +62,8 @@ addOptional(p,'SingleBeat',defaultSingleBeat);
 addOptional(p,'IgnoreUpToStartI',defaultIgnoreUpToStartI);
 addOptional(p,'InteractiveIfAutoFails',defaultInteractiveIfAutoFails);
 
+addOptional(p, 'DerivativeAbsoluteThreshold', defaultDerivativeAbsoluteThreshold)
+
 parse(p,varargin{:});
 
 params.DerivativePeakThreshold = p.Results.DerivativePeakThreshold;
@@ -71,6 +78,8 @@ params.SingleBeat = p.Results.SingleBeat;
 params.IgnoreUpToStartI = p.Results.IgnoreUpToStartI;
 params.InteractiveIfAutoFails = p.Results.InteractiveIfAutoFails;
 params.Interactive = p.Results.Interactive;
+
+params.DerivativeAbsoluteThreshold = p.Results.DerivativeAbsoluteThreshold;
 
 beatI = analysis.AutoBeatDetect(data, params);
 
