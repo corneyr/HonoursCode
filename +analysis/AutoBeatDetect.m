@@ -8,6 +8,8 @@ function beatI = AutoBeatDetect(data, params)
 %  params.IgnoreUpToStartI = 30 ignore detections up to this index (for PeakCurvature only)
 
 % Author: Jonathan Mynard, jonathan.mynard@mcri.edu.au
+% Edited badly by Bill and Raph to change from peak prominence detection to
+% aboslute threshold detection.
 
 if ~isfield(params, 'SingleBeat')
     params.SingleBeat = 0;
@@ -32,7 +34,8 @@ switch params.Method
         if isfield(params, 'SingleBeat') && params.SingleBeat
             [dpdtmax, imax] = max(dpdt);
         else
-            [dpdtmax, imax] = findpeaks(dpdt, 'MinPeakProminence', params.DerivativePeakThreshold*range(dpdt));
+            %[dpdtmax, imax] = findpeaks(dpdt, 'MinPeakProminence', params.DerivativePeakThreshold*range(dpdt));
+            [dpdtmax, imax] = findpeaks(dpdt, 'MinPeakHeight', params.DerivativeAbsoluteThreshold);
         end
         if params.InspectPlot
             figure
