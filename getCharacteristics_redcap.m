@@ -14,7 +14,7 @@ fullpath = fullfile(pathdef,filename);
 opts = detectImportOptions(fullpath);
 
 % Specify column names and types
-opts.SelectedVariableNames = ["thci", "date_of_study", "measno_aor1", "measno_aor2"];
+opts.SelectedVariableNames = ["thci", "date_of_study", "measno_aor1", "startI_1", "endI_1", "measno_aor2", "startI_2", "endI_2"];
 opts = setvaropts(opts, "date_of_study", "InputFormat", "dd/MM/yyyy");
 
 % Import the data
