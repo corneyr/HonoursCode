@@ -14,6 +14,10 @@ for i = 1:height(characteristicsredcap)
     id = characteristicsredcap.thci(i); %for pointing to invasive recording
     cuffID1 = characteristicsredcap.measno_aor1(i); %for pointing to cuff1
     cuffID2 = characteristicsredcap.measno_aor2(i); %for pointing to cuff2
+    cuffIdxs_S1 = characteristicsredcap.startI_1(i); %need to check
+    cuffIdxs_E1 = characteristicsredcap.endI_1(i); %need to check
+    cuffIdxs_S2 = characteristicsredcap.startI_2(i); %need to check
+    cuffIdxs_E2 = characteristicsredcap.endI_2(i); %need to check
 
     bigData(i).id = id;
     bigData(i).cuffID = {};
@@ -21,7 +25,13 @@ for i = 1:height(characteristicsredcap)
     bigData(i).invasive_path = {};
     bigData(i).cuffID{1} = cuffID1;
     bigData(i).cuffID{2} = cuffID2;
-    bigData(i).cuffRecordingIdxs = {};
+    bigData(i).cuffIdxs = {};
+    bigData(i).cuffIdxs{1} = {}; 
+    bigData(i).cuffIdxs{2} = {};
+    bigData(i).cuffIdxs{1} = cuffIdxs_S1; %start of deflation cuff1
+    bigData(i).cuffIdxs{2} = cuffIdxs_E1; %end of deflation cuff1
+    bigData(i).cuffIdxs{3} = cuffIdxs_S2; %start of deflation cuff2
+    bigData(i).cuffIdxs{4} = cuffIdxs_E2; %end of deflation cuff2
 
     if ~isnan(cuffID1) %Check if Cuff recording exists
         two_files = dir(home_path +"\InvasiveBP\" + id + "*"); %the two invasive .txts
