@@ -240,7 +240,11 @@ changeThreshold([],[],f, data, params);
 function decreaseThreshold(~,~,f, data, params)
 handles = guihandles(f);
 thresh = str2double(handles.ThreshEdit.String);
-thresh = thresh - 0.05;
+if thresh < 0.1
+    thresh = thresh / 2;
+else
+    thresh = thresh - 0.05;
+end
 handles.ThreshEdit.String = sprintf('%g', thresh);
 changeThreshold([],[],f, data, params);
 

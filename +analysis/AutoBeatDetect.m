@@ -34,8 +34,7 @@ switch params.Method
         if isfield(params, 'SingleBeat') && params.SingleBeat
             [dpdtmax, imax] = max(dpdt);
         else
-            %[dpdtmax, imax] = findpeaks(dpdt, 'MinPeakProminence', params.DerivativePeakThreshold*range(dpdt));
-            [dpdtmax, imax] = findpeaks(dpdt, 'MinPeakHeight', params.DerivativeAbsoluteThreshold);
+            [dpdtmax, imax] = findpeaks(dpdt, 'MinPeakProminence', params.DerivativePeakThreshold*range(dpdt));            
         end
         if params.InspectPlot
             figure
