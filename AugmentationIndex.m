@@ -73,6 +73,16 @@ featuretimes.shoulder = time(shoulderI);
 pksI(prom < max(prom)*params.InflectionPointProminenceThreshold) = [];
 pksI(pksI < minI) = [];  % Exclude peaks occurring before end-diastole
 pksI(pres(pksI) < (minP + 0.3*(maxP-minP))) = [];  % Exclude peaks occurring too early in systole (before pressure has risen by 30% of pulse)
+
+% Sometimes no inflection point is discovered. Need to deal with that.
+% This is not meant to be a complete solution.
+if length(pksI) < 1
+    AI = NaN;
+    Paug = NaN;
+    featuretimes = NaN;
+    return
+end
+
 inflectI = pksI(1); 
 featuretimes.inflection = time(inflectI);
 
