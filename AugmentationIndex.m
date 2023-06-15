@@ -46,15 +46,15 @@ end
 derpolyorder = 4;
 
 %% Calculate the fourth and second derivatives
-ddt4 = derivative(pres, derwindow, derpolyorder, 4);
-ddt2 = derivative(pres, derwindow, derpolyorder, 2);
+ddt4 = analysis.derivative(pres, derwindow, derpolyorder, 4);
+ddt2 = analysis.derivative(pres, derwindow, derpolyorder, 2);
 
 %% Detect the location of the pressure foot and of maximum pressure
 if strcmp(params.FootMethod, 'Minimum')
     [minP, minI] = min(pres(1:round(length(pres)/3)));  % Assume that the foot is defined as the minimum pressure in the first third of the signal
     enddiastoleT = time(minI);
 else
-    minI = BeatOnsetDetect(pres, 'Method', params.FootMethod, 'SingleBeat', 1);
+    minI = analysis.BeatOnsetDetect(pres, 'Method', params.FootMethod, 'SingleBeat', 1);
     minP = interp1(1:length(pres), pres, minI);
     enddiastoleT = interp1(1:length(time), time, minI);
 end
