@@ -7,11 +7,12 @@ characteristicsredcap = getCharacteristics_redcap();
 home_path = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\';
 %InvasiveBP\
 %Hobart BP+\
+%InvasiveBrachial\
 
 bigData = struct;
 
 for i = 1:height(characteristicsredcap)
-    id = characteristicsredcap.thci(i); %for pointing to invasive recording
+    id = characteristicsredcap.thci(i); %for pointing to invasive aorta and brachial recording
     cuffID1 = characteristicsredcap.measno_aor1(i); %for pointing to cuff1
     cuffID2 = characteristicsredcap.measno_aor2(i); %for pointing to cuff2
     cuffIdxs_S1 = characteristicsredcap.startI_1(i); %for pointing at start index 1
@@ -23,6 +24,7 @@ for i = 1:height(characteristicsredcap)
     bigData(i).cuffID = {};
     bigData(i).xml_path = {};
     bigData(i).invasive_path = {};
+    bigData(i).invasivebrachial_path = {};
     bigData(i).cuffID{1} = cuffID1;
     bigData(i).cuffID{2} = cuffID2;
     bigData(i).cuffIdxs1 = {};
@@ -33,23 +35,33 @@ for i = 1:height(characteristicsredcap)
     bigData(i).cuffIdxs2{2} = cuffIdxs_E2; %end of deflation cuff2
 
     if ~isnan(cuffID1) %Check if Cuff recording exists
-        two_files = dir(home_path +"\InvasiveBP\" + id + "*"); %the two invasive .txts
+        %Get invasive aortic data
+        two_files = dir(home_path +"\InvasiveBP\" + id + "*"); %the two invasive aortic .txts
         if length(two_files) == 2 %some files are simply missing.
             disp(["Working on ID", id])
             for j = 1:2
-                bigData(i).invasivedata = {};
                 invasive_path = home_path +"\InvasiveBP\" + two_files(j).name;
                 invasivedata = readtable(invasive_path);
                 bigData(i).invasive_path{j} = invasive_path;
                 bigData(i).invasivedata{j} = invasivedata.Var1;
                 [bigData(i).cuffdata{j}, bigData(i).xml_path{j}] = getXMLfile(bigData(i).cuffID{j});
+
             end
         end
-    
-    end
 
-end
-
+        %Get invasive brachial data if it exists.
+        one_file = dir(home_path + "\InvasiveBrachial\" + id + "*"); %the invasive brachial .txts
+        if length(one_file) == 1 
+            disp(["Working on brachial ID",id])
+            invasivebrachial_path = home_path + "\InvasiveBrachial\" + one_file.name;
+            invasivebrachialdata = readtable(invasivebrachial_path);
+            bigData(i).invasivebrachial_path = invasivebrachial_path;
+            bigData(i).invasivebrachialdata = invasivebrachialdata.Var1;
+        else
+            disp(["problem with ID ", id])
+        end
+    end 
 end 
 
-
+end 
+        
