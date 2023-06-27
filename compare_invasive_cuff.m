@@ -1,4 +1,12 @@
-%for i = 1:length(bigData)
+% issues: stops at 5 as Nan, need to tell to ignore 
+% Need to detrend the data(have tried): 
+    % bp = 0; %breakpoint
+    % cuff_beatI = detrend(cuff_beatI, 1, bp, "Continuous",false) + abs(min(detrend(cuff_beatI, 1, bp, "Continuous",false)));   %Doesn't work properly
+    % tsin = cuff_beatI(1:length(bigData),1);
+    % tsout = detrend(tsin, 'linear');
+    % cuff_beatId = detrend(cuff_beatI);
+
+% for i = 1:length(bigData)
 i = 1;
 
 % Note to self, we probably want to rewrite this back into bigData at some
@@ -24,6 +32,8 @@ for n = 1:(length(cuff_beatI)-1)
     plot_aug_idx(bigData(i).cuffdata{1,2}(cuff_beatI(n):cuff_beatI(n+1)), 0.02); 
     % xlim([0, 1]) %shrinks invasive to 1second
 end
+
+% end %used for 'for i = 1:length(bigData)'
 
 % Labelling the axis with name and AIx for each pulse
 function t = plot_aug_idx(pulse, dt)
@@ -57,7 +67,6 @@ function cuff_beatI = calc_cuff_beati(bigData, subject)
     sampletime = 0.004;
     osc = Oscillogram(bigData(subject).cuffdata{1,2}, sampletime, 'BaselineSmoothTime', 4, 'OscillogramSmoothTime', 0.2, 'Plot', 0);
     [cuff_beatI, ~] = analysis.BeatOnsetDetect(osc, 'Method', 'GradientIntersection', 'Interactive', 1,'RegionLimits', [max(bigData(subject).cuffdata{1,2}), length(bigData(subject).cuffdata{1,2})], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.05);
-    cuff_beatI = detrend(cuff_beatI) + abs(min(detrend(cuff_beatI)));   %Doesn't work properly
     cuff_beatI = round(cuff_beatI); 
 end
 
@@ -72,3 +81,4 @@ function invasive_brachial_average = calc_invasive_brachial_average(bigData, sub
     [beatI, ~] = analysis.BeatOnsetDetect(bigData(subject).invasivebrachialdata, 'Method', 'GradientIntersection', 'Interactive', 1,'RegionLimits', [max(bigData(subject).invasivebrachialdata), length(bigData(subject).invasivebrachialdata)], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.55);
     invasive_brachial_average = analysis.AverageBeat(bigData(subject).invasivebrachialdata', beatI, 1, 0); % '3' can include/excule good/bad data from average calculation, change to 0 for no plot
 end
+
