@@ -73,7 +73,7 @@ end
 % Detect invasive aortic average 
 function invasive_average = calc_invasive_average(bigData, subject)
     [beatI, ~] = analysis.BeatOnsetDetect(bigData(subject).invasivedata{1,2}, 'Method', 'GradientIntersection', 'Interactive', 1,'RegionLimits', [max(bigData(subject).invasivedata{1,2}), length(bigData(subject).invasivedata{1,2})], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.55);
-    invasive_average = analysis.AverageBeat(bigData(subject).invasivedata{1,2}', beatI, 1, 0); % '3' can include/excule good/bad data from average calculation, 0 for no plot, 1 for show plot 
+    invasive_average = analysis.AverageBeat(bigData(subject).invasivedata{1,2}', beatI, 1, 3); % '3' can include/excule good/bad data from average calculation, 0 for no plot, 1 for show plot 
 end
 
 % Detect invasive brachial average 
