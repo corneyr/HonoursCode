@@ -1,17 +1,11 @@
-% issues: stops at 5 as Nan, need to tell to ignore 
-% Need to detrend the data(have tried): 
-    % bp = 0; %breakpoint
-    % cuff_beatI = detrend(cuff_beatI, 1, bp, "Continuous",false) + abs(min(detrend(cuff_beatI, 1, bp, "Continuous",false)));   %Doesn't work properly
-    % tsin = cuff_beatI(1:length(bigData),1);
-    % tsout = detrend(tsin, 'linear');
-    % cuff_beatId = detrend(cuff_beatI);
 
 for i = 1:length(bigData)
     if ~iscell(bigData(i).invasivedata) || ~iscell(bigData(i).cuffdata) || isempty(bigData(i).invasivebrachialdata)
         continue
     end
 
-%i = 5;
+% i = 4;
+
 % Note to self, we probably want to rewrite this back into bigData at some
 % point
 invasive_average = calc_invasive_average(bigData, i);
@@ -80,12 +74,12 @@ end
 % Detect invasive aortic average 
 function invasive_average = calc_invasive_average(bigData, subject)
     [beatI, ~] = analysis.BeatOnsetDetect(bigData(subject).invasivedata{1,2}, 'Method', 'GradientIntersection', 'Interactive', 1,'RegionLimits', [max(bigData(subject).invasivedata{1,2}), length(bigData(subject).invasivedata{1,2})], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.55);
-    invasive_average = analysis.AverageBeat(bigData(subject).invasivedata{1,2}', beatI, 1, 0); % '3' can include/excule good/bad data from average calculation, 0 for no plot, 1 for show plot 
+    invasive_average = analysis.AverageBeat(bigData(subject).invasivedata{1,2}', beatI, 1, 3); % '3' can include/excule good/bad data from average calculation, 0 for no plot, 1 for show plot 
 end
 
 % Detect invasive brachial average 
 function invasive_brachial_average = calc_invasive_brachial_average(bigData, subject)
     [beatI, ~] = analysis.BeatOnsetDetect(bigData(subject).invasivebrachialdata, 'Method', 'GradientIntersection', 'Interactive', 1,'RegionLimits', [max(bigData(subject).invasivebrachialdata), length(bigData(subject).invasivebrachialdata)], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.55);
-    invasive_brachial_average = analysis.AverageBeat(bigData(subject).invasivebrachialdata', beatI, 1, 0); % '3' can include/excule good/bad data from average calculation, change to 0 for no plot
+    invasive_brachial_average = analysis.AverageBeat(bigData(subject).invasivebrachialdata', beatI, 1, 3); % '3' can include/excule good/bad data from average calculation, change to 0 for no plot
 end
 
