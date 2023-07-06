@@ -11,6 +11,8 @@ home_path = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\Hon
 
 bigData = struct;
 
+invasive_filt_func = designfilt('lowpassiir','PassbandFrequency',10,'StopbandFrequency',15,'PassbandRipple',1,'StopbandAttenuation',60,'SampleRate',1000);
+
 for i = 1:height(characteristicsredcap)
     id = characteristicsredcap.thci(i); %for pointing to invasive aorta and brachial recording
     cuffID1 = characteristicsredcap.measno_aor1(i); %for pointing to cuff1
@@ -35,6 +37,7 @@ for i = 1:height(characteristicsredcap)
                 invasivedata = readtable(invasive_path);
                 bigData(i).invasive_path{j} = invasive_path;
                 bigData(i).invasivedata{j} = invasivedata.Var1;
+                bigData(i).filtered_invasivedata{j} = filtfilt(invasive_filt_func, bigData(i).invasivedata{j});
                 [bigData(i).cuffdata{j}, bigData(i).xml_path{j}] = getXMLfile(bigData(i).cuffID{j});
 
             end
@@ -56,6 +59,7 @@ for i = 1:height(characteristicsredcap)
             invasivebrachialdata = readtable(invasivebrachial_path);
             bigData(i).invasivebrachial_path = invasivebrachial_path;
             bigData(i).invasivebrachialdata = invasivebrachialdata.Var1;
+            bigData(i).filtered_invasivebrachialdata = filtfilt(invasive_filt_func, bigData(i).invasivebrachialdata);
         else
             disp(["problem with ID ", id])
         end
