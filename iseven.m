@@ -7,4 +7,3 @@ function evenness = iseven(input)
     end
 end
 
-u
