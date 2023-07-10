@@ -4,7 +4,7 @@
 %         continue
 %     end
 
-i = 1;
+i = 7;
 
 % Note to self, we probably want to rewrite this back into bigData at some
 % point
