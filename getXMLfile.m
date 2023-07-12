@@ -4,8 +4,11 @@ function [xml_data, xml_path] = getXMLfile(file_index, toppath)
 %  file_index: .... (e.g. for BPplus_00019.xml, file_index = 19)
 %  toppath: where all the data is (subfolders are '0000', '0001', etc)
 % Outputs:
-%  data: the cuffPressure read from the XML file
+%   data: the cuffPressure read from the XML file
 % Example: data = GetDataFile(file_column{i,1},toppath)
+% input: number of folders with data (foldern = 0:9)
+% input: file number at begining (folderi = [1,20...]
+% input: pathway to data
 
 if ~exist('toppath','var')
     toppath = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\HonoursCode\Data\Hobart BP+';
@@ -26,5 +29,4 @@ if isfile(xml_path)
 else
     xml_data = NaN;
     disp("Could not find " + xml_path)
-    % do something with the XML data,
 end
