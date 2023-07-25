@@ -39,7 +39,10 @@ for i = 1:height(characteristicsredcap)
                 bigData(i).invasive_path{j} = invasive_path;
                 bigData(i).invasivedata{j} = invasivedata.Var1;
                 bigData(i).filtered_invasivedata{j} = smooth(bigData(i).invasivedata{j}, 121, 'sgolay'); %S-G filter to smooth dampen waveforms
-                [bigData(i).cuffdata{j}, bigData(i).xml_path{j}] = getXMLfile(bigData(i).cuffID{j});
+                [bigData(i).cuffdata{j}, bigData(i).xml_path{j}, full_xml_data] = getXMLfile(bigData(i).cuffID{j});
+                bigData(i).cuff_sys{j} = str2double(full_xml_data.BPplus.MeasDataLogger.Sys.Text);
+                bigData(i).cuff_dia{j} = str2double(full_xml_data.BPplus.MeasDataLogger.Dia.Text);
+                bigData(i).cuff_map{j} = str2double(full_xml_data.BPplus.MeasDataLogger.Map.Text);
 
             end
         end
@@ -50,7 +53,7 @@ for i = 1:height(characteristicsredcap)
             [~, max_ind] = max(bigData(i).cuffdata{j});
             detrended_data = detrend( bigData(i).cuffdata{j}(max_ind:end), 3 );
             bigData(i).detrend_cuffdata{j} = detrended_data - min(detrended_data); 
-            bigData(i).filtered_cuffdata{j} = smooth(bigData(i).detrend_cuffdata{j}, 40, 'sgolay');
+            bigData(i).filtered_cuffdata{j} = smooth(bigData(i).detrend_cuffdata{j}, 10, 'sgolay');
         end
 
         %Get invasive brachial data if it exists.
