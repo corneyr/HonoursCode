@@ -1,7 +1,8 @@
-function bigData = linkingxmltotxt()
+function bigData = linkingxmltotxt(bigData)
 % identifying the invasive and cuff files for each patient and matching
 % them up to find if they are present in the data
-% Savitzky-Golay smoothing filter applied to invasive aortic and brachial to dampen waveforms
+% Savitzky-Golay smoothing filter applied to invasive aortic and brachial to dampen waveforms 
+% Savitzky-Golay smoothing filter applied to dampen cuff BP waveforms 
 % input: getCharacteristics_redcap 
 % input: homepath to data location
 % input: getXMLfile.m
@@ -12,11 +13,12 @@ home_path = 'C:\Users\corneyr\OneDrive - University of Tasmania\Honours 2023\Hon
 %InvasiveBP\
 %Hobart BP+\
 %InvasiveBrachial\
+if nargin == 0
+    bigData = struct;
+end
 
-bigData = struct;
-
-%for i = 1:height(characteristicsredcap)
-for i = 1:2
+for i = 1:height(characteristicsredcap)
+ % for i = 83
     id = characteristicsredcap.thci(i); %for pointing to invasive aorta and brachial recording
     cuffID1 = characteristicsredcap.measno_aor1(i); %for pointing to cuff1
     cuffID2 = characteristicsredcap.measno_aor2(i); %for pointing to cuff2
@@ -67,41 +69,90 @@ for i = 1:2
             bigData(i).invasivebrachialdata = invasivebrachialdata.Var1;
             bigData(i).filtered_invasivebrachialdata = smooth(bigData(i).invasivebrachialdata, 121, 'sgolay'); %S-G filter to smooth dampen waveforms
         else
-            disp(["problem with brachial ID ", id])
+            disp(["Problem with brachial ID ", id])
         end
     end
 
     %Calculate important statistics from cuff data
-    if isfield(bigData, 'cuff_beatI')
-        if isempty(bigData(i).cuff_beatI)
-            for k=1:length(bigData(i).cuffdata)
-                bigData(i).cuff_beatI{k} = calc_cuff_beati(bigData(i).filtered_cuffdata{k});
+    if ~iscell(bigData(i).cuffdata) || ~iscell(bigData(i).invasivedata)
+                continue 
+    else 
+        if isfield(bigData, 'cuff_beatI')
+            if isempty(bigData(i).cuff_beatI)
+                for k = 1:length(bigData(i).cuffdata)
+                    bigData(i).cuff_beatI{k} = calc_cuff_beati(bigData(i).filtered_cuffdata{k});
+                end
+            end
+        else
+            for k = 1:length(bigData(i).cuffdata)
+                    bigData(i).cuff_beatI{k} = calc_cuff_beati(bigData(i).filtered_cuffdata{k});
             end
         end
-    else
-        for k=1:length(bigData(i).cuffdata)
-            bigData(i).cuff_beatI{k} = calc_cuff_beati(bigData(i).filtered_cuffdata{k});
-        end
+
+    %Calculate important statistics from invasive aortic and brachial data
+        if isfield(bigData, 'invasive_beatI')
+            if isempty(bigData(i).invasive_beatI)
+                for k = 1:length(bigData(i).filtered_invasivedata)
+                    bigData(i).invasive_beatI{k} = calc_invasive_beatI(bigData(i).filtered_invasivedata{k});
+                    bigData(i).invasive_average{k} = calc_invasive_average(bigData(i).filtered_invasivedata{k}, bigData(i).invasive_beatI{k});
+                    
+                    bigData(i).aortic_sys{k} = max(bigData(i).invasive_average{k});
+                    bigData(i).aortic_dia{k} = min(bigData(i).invasive_average{k});
+                    bigData(i).aortic_map{k} = mean(bigData(i).invasive_average{k});
+                end
+                if ~isempty(bigData(i).invasivebrachialdata)
+                    bigData(i).invasivebrachialdata_beatI = calc_invasive_beatI(bigData(i).filtered_invasivebrachialdata);
+                    bigData(i).invasivebrachial_average = calc_invasive_average(bigData(i).filtered_invasivebrachialdata,  bigData(i).invasivebrachialdata_beatI);
+
+                    bigData(i).brachial_sys = max(bigData(i).invasivebrachial_average);
+                    bigData(i).brachial_dia = min(bigData(i).invasivebrachial_average);
+                    bigData(i).brachial_map = mean(bigData(i).invasivebrachial_average);
+
+                end 
+            end
+        else
+            for k = 1:length(bigData(i).filtered_invasivedata)
+               bigData(i).invasive_beatI{k} = calc_invasive_beatI(bigData(i).filtered_invasivedata{k});
+               bigData(i).invasive_average{k} = calc_invasive_average(bigData(i).filtered_invasivedata{k}, bigData(i).invasive_beatI{k});
+
+               bigData(i).aortic_sys{k} = max(bigData(i).invasive_average{k});
+               bigData(i).aortic_dia{k} = min(bigData(i).invasive_average{k});
+               bigData(i).aortic_map{k} = mean(bigData(i).invasive_average{k});
+
+            end
+            if ~isempty(bigData(i).invasivebrachialdata)
+               bigData(i).invasivebrachialdata_beatI = calc_invasive_beatI(bigData(i).filtered_invasivebrachialdata);
+               bigData(i).invasivebrachial_average = calc_invasive_average(bigData(i).filtered_invasivebrachialdata,  bigData(i).invasivebrachialdata_beatI);                 
+               bigData(i).brachial_sys = max(bigData(i).invasivebrachial_average);
+               bigData(i).brachial_dia = min(bigData(i).invasivebrachial_average);
+               bigData(i).brachial_map = mean(bigData(i).invasivebrachial_average);
+            end 
+         end
+    end 
+
+
+    %calculate Augmentation Indexs for Aortic, Brachial and each cuff
+    %pulse.
+    for k = 1:length(bigData(i).filtered_invasivedata)
+        time_invasive = (0:(length(bigData(i).invasive_average{k})-1))*0.001;
+        [bigData(i).aortic_AI{k}, ~, bigData(i).aortic_featuretimes{k}] = analysis.AugmentationIndex(time_invasive, bigData(i).invasive_average{k}, 'DoPlot',0);
+    end
+    if ~isempty(bigData(i).invasivebrachialdata)
+        time_invasive = (0:(length(bigData(i).invasivebrachial_average)-1))*0.001;
+        [bigData(i).brachial_AI, ~, bigData(i).brachial_featuretimes] = analysis.AugmentationIndex(time_invasive, bigData(i).invasivebrachial_average, 'DoPlot',0);
     end
 
-    %Calculate important statistics from invasive aortic data
-    if isfield(bigData, 'invasive_beatI')
-        if isempty(bigData(i).invasive_beatI)
-            for k=1:length(bigData(i).filtered_invasivedata)
-                bigData(i).invasive_beatI{k} = calc_invasive_beatI(bigData(i).filtered_invasivedata{k});
-                bigData(i).invasive_average{k} = calc_invasive_average(bigData(i).filtered_invasivedata{k}, bigData(i).invasive_beatI{k});
+
+    for k = 1:length(bigData(i).cuff_beatI)
+        n_pulses = length(bigData(i).cuff_beatI{k})-1;
+        bigData(i).cuff_AIx{k} = zeros(n_pulses, 1);
+            for n = 1:n_pulses
+                pulse = bigData(i).filtered_cuffdata{k}(bigData(i).cuff_beatI{k}(n):bigData(i).cuff_beatI{k}(n+1));
+                time_cuff =  (0:(length(pulse)-1))*0.005;
+                [bigData(i).cuff_AIx{k}(n), ~, bigData(i).cuff_featuretimes{k}{n}] = analysis.AugmentationIndex(time_cuff, pulse, 'DoPlot',0);
             end
-            bigData(i).invasivebrachialdata_beatI = calc_invasive_beatI(bigData(i).filtered_invasivebrachialdata);
-            bigData(i).invasivebrachial_average = calc_invasive_average(bigData(i).filtered_invasivebrachialdata,  bigData(i).invasivebrachialdata_beatI);
-        end
-    else
-        for k=1:length(bigData(i).filtered_invasivedata)
-           bigData(i).invasive_beatI{k} = calc_invasive_beatI(bigData(i).filtered_invasivedata{k});
-           bigData(i).invasive_average{k} = calc_invasive_average(bigData(i).filtered_invasivedata{k}, bigData(i).invasive_beatI{k});
-        end
-            bigData(i).invasivebrachialdata_beatI = calc_invasive_beatI(bigData(i).filtered_invasivebrachialdata);
-            bigData(i).invasivebrachial_average = calc_invasive_average(bigData(i).filtered_invasivebrachialdata,  bigData(i).invasivebrachialdata_beatI);
     end
+
 
 
 end 
@@ -115,6 +166,7 @@ function cuff_beatI = calc_cuff_beati(filtered_cuffdata)
     cuff_beatI =  round(cuff_beatI); 
 end
 
+% Detect invasive aortic beat indicies
 function invasive_beatI = calc_invasive_beatI(filtered_invasivedata)
     [invasive_beatI, ~] = analysis.BeatOnsetDetect(filtered_invasivedata, 'Method', 'GradientIntersection', 'Interactive', 1,'RegionLimits', [max(filtered_invasivedata), length(filtered_invasivedata)], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.55);
 end
