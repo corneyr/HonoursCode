@@ -17,8 +17,8 @@ if nargin == 0
     bigData = struct;
 end
 
-for i = 1:height(characteristicsredcap)
- % for i = 83
+% for i = 1:height(characteristicsredcap)
+ for i = 12
     id = characteristicsredcap.thci(i); %for pointing to invasive aorta and brachial recording
     cuffID1 = characteristicsredcap.measno_aor1(i); %for pointing to cuff1
     cuffID2 = characteristicsredcap.measno_aor2(i); %for pointing to cuff2
@@ -162,7 +162,9 @@ function cuff_beatI = calc_cuff_beati(filtered_cuffdata)
     %Returns indices where cuffbeats start
     sampletime = 0.004;
     osc = Oscillogram(filtered_cuffdata, sampletime, 'BaselineSmoothTime', 4, 'OscillogramSmoothTime', 0.2, 'Plot', 0);
-    [cuff_beatI, ~] = analysis.BeatOnsetDetect(osc, 'Method', 'GradientIntersection', 'Interactive', 1,'RegionLimits', [max(filtered_cuffdata), length(filtered_cuffdata)], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.05);
+    [cuff_beatI, ~] = analysis.BeatOnsetDetect(osc, 'Method', 'PeakCurvature', 'Interactive', 1,'RegionLimits', [max(filtered_cuffdata), length(filtered_cuffdata)], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.05);
+    % [cuff_beatI, ~] = analysis.BeatOnsetDetect(osc, 'Method', 'GradientIntersection', 'Interactive', 1,'RegionLimits', [max(filtered_cuffdata), length(filtered_cuffdata)], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.05);
+    % cuff_beatI = cuff_beatI - 20;
     cuff_beatI =  round(cuff_beatI); 
 end
 
