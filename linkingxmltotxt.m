@@ -18,7 +18,7 @@ if nargin == 0
 end
 
 % for i = 1:height(characteristicsredcap)
- for i = 12
+for i = 12
     id = characteristicsredcap.thci(i); %for pointing to invasive aorta and brachial recording
     cuffID1 = characteristicsredcap.measno_aor1(i); %for pointing to cuff1
     cuffID2 = characteristicsredcap.measno_aor2(i); %for pointing to cuff2
@@ -135,11 +135,11 @@ end
     %pulse.
     for k = 1:length(bigData(i).filtered_invasivedata)
         time_invasive = (0:(length(bigData(i).invasive_average{k})-1))*0.001;
-        [bigData(i).aortic_AI{k}, ~, bigData(i).aortic_featuretimes{k}] = analysis.AugmentationIndex(time_invasive, bigData(i).invasive_average{k}, 'DoPlot',0);
+        [bigData(i).aortic_AI{k}, ~, bigData(i).aortic_featuretimes{k}] = analysis.AugmentationIndex(time_invasive, bigData(i).invasive_average{k}, 'InflectionPointProminenceThreshold', 0.05, 'DoPlot',0);
     end
     if ~isempty(bigData(i).invasivebrachialdata)
         time_invasive = (0:(length(bigData(i).invasivebrachial_average)-1))*0.001;
-        [bigData(i).brachial_AI, ~, bigData(i).brachial_featuretimes] = analysis.AugmentationIndex(time_invasive, bigData(i).invasivebrachial_average, 'DoPlot',0);
+        [bigData(i).brachial_AI, ~, bigData(i).brachial_featuretimes] = analysis.AugmentationIndex(time_invasive, bigData(i).invasivebrachial_average, 'InflectionPointProminenceThreshold', 0.05, 'DoPlot',0);
     end
 
 
@@ -149,7 +149,7 @@ end
             for n = 1:n_pulses
                 pulse = bigData(i).filtered_cuffdata{k}(bigData(i).cuff_beatI{k}(n):bigData(i).cuff_beatI{k}(n+1));
                 time_cuff =  (0:(length(pulse)-1))*0.005;
-                [bigData(i).cuff_AIx{k}(n), ~, bigData(i).cuff_featuretimes{k}{n}] = analysis.AugmentationIndex(time_cuff, pulse, 'DoPlot',0);
+                [bigData(i).cuff_AIx{k}(n), ~, bigData(i).cuff_featuretimes{k}{n}] = analysis.AugmentationIndex(time_cuff, pulse, 'InflectionPointProminenceThreshold', 0.05, 'DoPlot',0);
             end
     end
 
@@ -162,15 +162,13 @@ function cuff_beatI = calc_cuff_beati(filtered_cuffdata)
     %Returns indices where cuffbeats start
     sampletime = 0.004;
     osc = Oscillogram(filtered_cuffdata, sampletime, 'BaselineSmoothTime', 4, 'OscillogramSmoothTime', 0.2, 'Plot', 0);
-    [cuff_beatI, ~] = analysis.BeatOnsetDetect(osc, 'Method', 'PeakCurvature', 'Interactive', 1,'RegionLimits', [max(filtered_cuffdata), length(filtered_cuffdata)], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.05);
-    % [cuff_beatI, ~] = analysis.BeatOnsetDetect(osc, 'Method', 'GradientIntersection', 'Interactive', 1,'RegionLimits', [max(filtered_cuffdata), length(filtered_cuffdata)], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.05);
-    % cuff_beatI = cuff_beatI - 20;
+    [cuff_beatI, ~] = analysis.BeatOnsetDetect(osc, 'Method', 'PeakCurvature', 'CurvatureThreshold', 0.7, 'Interactive', 1,'RegionLimits', [max(filtered_cuffdata), length(filtered_cuffdata)], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.05);
     cuff_beatI =  round(cuff_beatI); 
 end
 
 % Detect invasive aortic beat indicies
-function invasive_beatI = calc_invasive_beatI(filtered_invasivedata)
-    [invasive_beatI, ~] = analysis.BeatOnsetDetect(filtered_invasivedata, 'Method', 'GradientIntersection', 'Interactive', 1,'RegionLimits', [max(filtered_invasivedata), length(filtered_invasivedata)], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.55);
+function invasive_beatI = calc_invasive_beatI(filtered_invasivedata) 
+    [invasive_beatI, ~] = analysis.BeatOnsetDetect(filtered_invasivedata, 'Method', 'PeakCurvature', 'CurvatureThreshold', 0.7, 'Interactive', 1,'RegionLimits', [max(filtered_invasivedata), length(filtered_invasivedata)], 'MinimumThreshold', 0.1, 'DerivativePeakThreshold', 0.55);
 end
 
 % Detect invasive aortic average 
