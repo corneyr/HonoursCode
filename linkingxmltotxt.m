@@ -17,8 +17,7 @@ if nargin == 0
     bigData = struct;
 end
 
-% for i = 1:height(characteristicsredcap)
-for i = 12
+for i = 1:height(characteristicsredcap)
     id = characteristicsredcap.thci(i); %for pointing to invasive aorta and brachial recording
     cuffID1 = characteristicsredcap.measno_aor1(i); %for pointing to cuff1
     cuffID2 = characteristicsredcap.measno_aor2(i); %for pointing to cuff2
@@ -118,8 +117,8 @@ for i = 12
                bigData(i).aortic_sys{k} = max(bigData(i).invasive_average{k});
                bigData(i).aortic_dia{k} = min(bigData(i).invasive_average{k});
                bigData(i).aortic_map{k} = mean(bigData(i).invasive_average{k});
-
             end
+            
             if ~isempty(bigData(i).invasivebrachialdata)
                bigData(i).invasivebrachialdata_beatI = calc_invasive_beatI(bigData(i).filtered_invasivebrachialdata);
                bigData(i).invasivebrachial_average = calc_invasive_average(bigData(i).filtered_invasivebrachialdata,  bigData(i).invasivebrachialdata_beatI);                 
