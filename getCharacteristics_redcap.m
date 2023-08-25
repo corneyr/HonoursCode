@@ -22,5 +22,3 @@ opts = setvaropts(opts, "date_of_study", "InputFormat", "dd/MM/yyyy");
 characteristicsredcap = readtable(fullpath, opts);
 
 end
-
-%%
