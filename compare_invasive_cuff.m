@@ -10,7 +10,7 @@ for i = 1:length(bigData)
         disp(["Figure created", i j])
 
     end 
-    j = 1;
+    j = 2;
 
 
     % figure();
@@ -26,18 +26,42 @@ for i = 1:length(bigData)
         title_handle = plot_aug_idx(bigData(i).invasivebrachial_average, bigData(i).brachial_AI, bigData(i).brachial_featuretimes, 0.001, sp, "Brachial Pressure", false, false);
     end
     
-    %calulate idx of pulse whose start pressure is closest to aortic
+    %calculate idx of pulse whose start pressure is closest to aortic
     %systolic_pressure
     time_offset = length(bigData(i).cuffdata{j}) - length(bigData(i).filtered_cuffdata{j});
     [~, bigData(i).close_to_sys_idx{j}] = min(abs(bigData(i).cuffdata{j}(bigData(i).cuff_beatI{j}(1:end-1)+time_offset) - bigData(i).aortic_sys{j}));
     [~, bigData(i).close_to_map_idx{j}] = min(abs(bigData(i).cuffdata{j}(bigData(i).cuff_beatI{j}(1:end-1)+time_offset) - bigData(i).aortic_map{j}));
     [~, bigData(i).close_to_dia_idx{j}] = min(abs(bigData(i).cuffdata{j}(bigData(i).cuff_beatI{j}(1:end-1)+time_offset) - bigData(i).aortic_dia{j}));
-    
-    %finding the AIx of the cuff beat found at the found aortic sys, map and dia
+        %brachial
+    if ~isempty(bigData(i).invasivebrachialdata) 
+        [~, bigData(i).close_to_sys_idx_brach{j}] = min(abs(bigData(i).cuffdata{j}(bigData(i).cuff_beatI{j}(1:end-1)+time_offset) - bigData(i).brachial_sys));
+        [~, bigData(i).close_to_map_idx_brach{j}] = min(abs(bigData(i).cuffdata{j}(bigData(i).cuff_beatI{j}(1:end-1)+time_offset) - bigData(i).brachial_map));
+        [~, bigData(i).close_to_dia_idx_brach{j}] = min(abs(bigData(i).cuffdata{j}(bigData(i).cuff_beatI{j}(1:end-1)+time_offset) - bigData(i).brachial_dia));
+    end
+        %cuff
+    if iscell(bigData(i).cuffdata)
+        [~, bigData(i).close_to_sys_idx_cuff{j}] = min(abs(bigData(i).cuffdata{j}(bigData(i).cuff_beatI{j}(1:end-1)+time_offset) - bigData(i).cuff_sys{j}));
+        [~, bigData(i).close_to_map_idx_cuff{j}] = min(abs(bigData(i).cuffdata{j}(bigData(i).cuff_beatI{j}(1:end-1)+time_offset) - bigData(i).cuff_map{j}));
+        [~, bigData(i).close_to_dia_idx_cuff{j}] = min(abs(bigData(i).cuffdata{j}(bigData(i).cuff_beatI{j}(1:end-1)+time_offset) - bigData(i).cuff_dia{j}));
+    end
+
+
+    %finding the AIx of the cuff beat found at the found sys, map and dia
     bigData(i).cuffAI_at_sys{j} = bigData(i).cuff_AIx{j}( bigData(i).close_to_sys_idx{j} );
     bigData(i).cuffAI_at_map{j} = bigData(i).cuff_AIx{j}( bigData(i).close_to_map_idx{j} );
     bigData(i).cuffAI_at_dia{j} = bigData(i).cuff_AIx{j}( bigData(i).close_to_dia_idx{j} );
-
+        %brachial
+    if ~isempty(bigData(i).invasivebrachialdata) 
+        bigData(i).cuffAI_at_sys_brach{j} = bigData(i).cuff_AIx{j}( bigData(i).close_to_sys_idx_brach{j} );
+        bigData(i).cuffAI_at_map_brach{j} = bigData(i).cuff_AIx{j}( bigData(i).close_to_map_idx_brach{j} );
+        bigData(i).cuffAI_at_dia_brach{j} = bigData(i).cuff_AIx{j}( bigData(i).close_to_dia_idx_brach{j} );
+    end
+        %cuff
+    if iscell(bigData(i).cuffdata)
+        bigData(i).cuffAI_at_sys_cuff{j} = bigData(i).cuff_AIx{j}( bigData(i).close_to_sys_idx_cuff{j} );
+        bigData(i).cuffAI_at_map_cuff{j} = bigData(i).cuff_AIx{j}( bigData(i).close_to_map_idx_cuff{j} );
+        bigData(i).cuffAI_at_dia_cuff{j} = bigData(i).cuff_AIx{j}( bigData(i).close_to_dia_idx_cuff{j} );   
+    end
 
     lower_step_size = 1/(bigData(i).close_to_map_idx{j} - bigData(i).close_to_sys_idx{j});
     upper_step_size = 1/(bigData(i).close_to_dia_idx{j} - bigData(i).close_to_map_idx{j});
@@ -64,12 +88,25 @@ for i = 1:length(bigData)
         % finding the cuff beat which has the closest AIx to the aortic AIx
         [~, bigData(i).min_idx{j}] = min(abs(bigData(i).cuff_AIx{j} - bigData(i).aortic_AI{j}));
         bigData(i).cuffidx_aorticAI_frommap{j} = (bigData(i).close_to_map_idx{j} - bigData(i).min_idx{j});
-        
+        %brachial
+        if ~isempty(bigData(i).invasivebrachialdata) 
+            [~, bigData(i).min_idx_brach{j}] = min(abs(bigData(i).cuff_AIx{j} - bigData(i).brachial_AI));
+            bigData(i).cuffidx_brachialAI_frommap{j} = (bigData(i).close_to_map_idx_brach{j} - bigData(i).min_idx_brach{j});
+        end
+
+
         %finding the amplification from aortic to brachial 
         bigData(i).sbp_amp{j} = bigData(i).brachial_sys - bigData(i).aortic_sys{j};
         bigData(i).dbp_amp{j} = bigData(i).brachial_dia - bigData(i).aortic_dia{j};
         bigData(i).map_amp{j} = bigData(i).brachial_map - bigData(i).aortic_map{j};
 
+
+        %finding the AIx of the cuff beat found at aortic aix
+        bigData(i).cuffAIx_at_AIx{j} = bigData(i).cuff_AIx{j}(bigData(i).min_idx{j});
+        %brachial
+        if ~isempty(bigData(i).invasivebrachialdata) 
+            bigData(i).cuffAIx_at_AIx_brach{j} = bigData(i).cuff_AIx{j}(bigData(i).min_idx_brach{j});
+        end
 
     end
 end %used for 'for i = 1:length(bigData)'
