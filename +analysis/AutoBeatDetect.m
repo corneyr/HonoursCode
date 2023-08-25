@@ -8,8 +8,6 @@ function beatI = AutoBeatDetect(data, params)
 %  params.IgnoreUpToStartI = 30 ignore detections up to this index (for PeakCurvature only)
 
 % Author: Jonathan Mynard, jonathan.mynard@mcri.edu.au
-% Edited badly by Bill and Raph to change from peak prominence detection to
-% aboslute threshold detection.
 
 if ~isfield(params, 'SingleBeat')
     params.SingleBeat = 0;
